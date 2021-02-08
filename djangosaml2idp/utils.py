@@ -68,7 +68,7 @@ def extract_validuntil_from_metadata(metadata: str) -> datetime.datetime:
     try:
         metadata_expiration_dt = arrow.get(ET.fromstring(metadata).attrib['validUntil']).datetime
     except Exception as e:
-        fallback = settings.get("SAML_IDP_FALLBACK_EXPIRATION_DAYS")
+        fallback = getattr(settings, "SAML_IDP_FALLBACK_EXPIRATION_DAYS", 0)
         if fallback:
             return now() + datetime.timedelta(days=fallback)
         raise ValidationError(f'Could not extra ValidUntil timestamp from metadata: {e}')
